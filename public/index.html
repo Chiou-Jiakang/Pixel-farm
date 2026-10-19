@@ -4,36 +4,42 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#173c33">
-  <title>Pixel Farm | v0.1.0</title>
+  <meta name="description" content="Pixel Farm v0.2.0：種植胡蘿蔔、馬鈴薯、番茄的像素風格農場原型。">
+  <title>Pixel Farm | v0.2.0</title>
   <link rel="stylesheet" href="./style.css">
   <script src="./script.js" defer></script>
 </head>
 <body>
   <main class="layout">
     <header class="topbar">
-      <div><p class="eyebrow">PROJECT 02 / FARM PROTOTYPE</p><h1>🌱 Pixel Farm</h1><p class="subtitle">種下一顆種子，收穫第一座小農場。</p></div>
-      <span class="version">v0.1.0</span>
+      <div><p class="eyebrow">PROJECT 02 / CROP GROWTH SYSTEM</p><h1>🌱 Pixel Farm</h1><p class="subtitle">選擇種子，看著三種作物慢慢成長。</p></div>
+      <span class="version">v0.2.0</span>
     </header>
     <section class="dashboard" aria-label="遊戲統計">
       <div class="stat"><span>🌱 播種次數</span><strong id="plantedCount">0</strong></div>
-      <div class="stat"><span>🥕 收成數量</span><strong id="harvestedCount">0</strong></div>
+      <div class="stat"><span>🧺 收成數量</span><strong id="harvestedCount">0</strong></div>
       <div class="stat"><span>🌾 成長中</span><strong id="growingCount">0</strong></div>
+    </section>
+    <section class="selector-panel" aria-labelledby="cropHeading">
+      <div class="section-title"><div><p class="eyebrow">SEED SELECTION</p><h2 id="cropHeading">今天要種什麼？</h2></div><span class="tip">選擇作物後再點空地</span></div>
+      <div class="crop-choices" id="cropChoices" role="group" aria-label="選擇作物"></div>
     </section>
     <div class="content">
       <section class="farm-panel" aria-labelledby="farmHeading">
         <div class="section-title"><div><p class="eyebrow">YOUR LITTLE FARM</p><h2 id="farmHeading">我的 4 × 4 農田</h2></div><span class="tip">點擊格子操作</span></div>
         <div class="farm-scene"><div id="farmGrid" class="farm-grid" role="group" aria-label="16 格農田"></div></div>
-        <div class="legend"><span>🟫 空地</span><span>🌱 成長中</span><span>🥕 已成熟</span></div>
+        <div class="legend"><span>🟫 空地</span><span>🌰 種子</span><span>🌱 幼苗</span><span>🌿 成長中</span><span>🧺 可收成</span></div>
       </section>
-      <aside class="side-panel" aria-label="玩法介紹">
+      <aside class="side-panel" aria-label="農夫手冊與收成紀錄">
         <h2>🧺 農夫手冊</h2>
-        <ol><li>點擊空地，播下胡蘿蔔種子。</li><li>等待 <strong>10 秒</strong>，作物逐漸長大。</li><li>看到成熟的胡蘿蔔，點一下就能收成。</li></ol>
-        <div class="hint"><strong>🌤️ 小提醒</strong><p>目前是前端原型：重新整理頁面後會重置農場。後續版本將加入商店、背包及 SQLite 存檔。</p></div>
+        <ol><li>先選擇胡蘿蔔、馬鈴薯或番茄。</li><li>點選空地播種，觀察四個成長階段。</li><li>成熟後點擊作物，就能收成並清空格子。</li></ol>
+        <div class="harvest-box"><h3>收成紀錄</h3><div id="harvestSummary" class="harvest-summary"></div></div>
+        <div class="hint"><strong>🌤️ 小提醒</strong><p>成熟時間採實際經過的時間計算。離開頁面時農場不會儲存，重新整理將重新開始。商店、背包及 SQLite 將於後續版本加入。</p></div>
         <button id="resetButton" class="reset" type="button">↻ 重設農場</button>
-        <p id="statusMessage" class="status" role="status" aria-live="polite">農場已準備就緒，選一格空地開始吧！</p>
+        <p id="statusMessage" class="status" role="status" aria-live="polite">選一種作物，開始耕種吧！</p>
       </aside>
     </div>
-    <footer>Pixel Farm · Frontend prototype · HTML / CSS / JavaScript</footer>
+    <footer>Pixel Farm v0.2.0 · Frontend prototype · HTML / CSS / JavaScript</footer>
   </main>
 </body>
 </html>
