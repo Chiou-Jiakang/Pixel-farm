@@ -1,6 +1,6 @@
 # Pixel Farm｜像素農場經營遊戲
 
-**目前程式版本：v0.3.0（商店與經濟系統；尚待使用者瀏覽器驗收與 GitHub 發布）**
+**目前程式版本：v0.3.0 — Shop & Economy System（已通過使用者瀏覽器人工驗收，並發布 GitHub Pre-release）**
 
 這是一款以 HTML、CSS、JavaScript 製作的單人農場經營網頁遊戲。沿用 v0.2.0 的 4×4 農田、三種作物與成長階段，新增商店、金幣、背包及販售交易。**目前沒有後端，也不會永久儲存資料；重新整理頁面即重置。**
 
@@ -61,7 +61,7 @@ Pixel-farm/
 node --test tests/game-core.test.cjs
 ```
 
-開發環境中的 **10 項遊戲核心邏輯測試已通過**；這不等於已在使用者電腦完成瀏覽器驗收。詳細範圍見 [`docs/TESTING.md`](docs/TESTING.md)。
+開發環境中的 **10 項遊戲核心邏輯自動化測試已通過**。使用者另外回報完成瀏覽器人工驗收，涵蓋種子購買、播種、成熟收成、販售、金幣計算、交易紀錄與重設；尚未完成全面跨瀏覽器、效能或安全性測試。詳細範圍見 [`docs/TESTING.md`](docs/TESTING.md)。
 
 ## 文件索引
 
@@ -70,7 +70,7 @@ node --test tests/game-core.test.cjs
 - [`docs/ROADMAP.md`](docs/ROADMAP.md)：後續版本計畫
 - [`docs/DEVLOG.md`](docs/DEVLOG.md)：可追溯開發紀錄
 - [`docs/TESTING.md`](docs/TESTING.md)：測試與待驗收事項
-- [`docs/RELEASE_NOTES_v0.3.0.md`](docs/RELEASE_NOTES_v0.3.0.md)：預備用 GitHub Release 說明（尚未發布）
+- [`docs/RELEASE_NOTES_v0.3.0.md`](docs/RELEASE_NOTES_v0.3.0.md)：v0.3.0 版本說明（[GitHub Pre-release 已發布](https://github.com/Chiou-Jiakang/Pixel-farm/releases/tag/v0.3.0)）
 
 ## 已知限制
 

@@ -1,6 +1,6 @@
 # Pixel Farm v0.3.0 — Shop & Economy System
 
-> 發布前草稿：在使用者本機完成 v0.3.0 人工驗收後，才應貼至 GitHub Release 並發布為 Pre-release。
+> 發布紀錄：v0.3.0 已於 2026-10-20 發布為 [GitHub Pre-release](https://github.com/Chiou-Jiakang/Pixel-farm/releases/tag/v0.3.0)，對應 Commit `1747895`。此文件為專案內保存的版本說明；GitHub Release 頁面保留正式發布文字。
 
 Pixel Farm v0.3.0 延續 16 格農田與三種作物的生長系統，首次加入種子購買、金幣、背包、作物販售與交易紀錄，構成一個基本的農場經濟循環。
 
@@ -15,7 +15,8 @@ Pixel Farm v0.3.0 延續 16 格農田與三種作物的生長系統，首次加�
 
 ## 技術與測試
 - HTML5、CSS3、JavaScript，無後端及資料庫。
-- 10 項 Node.js 遊戲核心邏輯自動測試已通過；使用者瀏覽器人工驗收需於發布前確認。
+- 10 項 Node.js 遊戲核心邏輯自動測試已通過；使用者已回報購買、播種、成熟收成、販售、金幣計算、交易紀錄及重設等瀏覽器人工驗收正常。
+- 尚未完成全面跨瀏覽器、效能與安全性測試。
 
 ## 執行方式
 下載 Source code ZIP，解壓縮後用瀏覽器直接開啟 `public/index.html`，無須安裝 npm 依賴。
