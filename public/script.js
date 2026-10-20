@@ -1,5 +1,5 @@
 'use strict';
-// v0.4.0: the server is authoritative. This file renders snapshots and sends actions only.
+// v0.5.0-alpha.1: the server is authoritative. This file renders snapshots and sends actions only.
 const core=window.FarmCore;
 let state=null, selectedCropId='carrot', serverOffset=0, busy=false;
 const el=Object.fromEntries(['farmGrid','cropChoices','plantedCount','harvestedCount','growingCount','coinCount','statusMessage','resetButton','spentValue','earnedValue','profitValue','shopList','inventoryList','transactionList'].map(id=>[id,document.getElementById(id)]));
@@ -7,7 +7,8 @@ function now(){return Date.now()+serverOffset;}
 function button(text,className,onClick,disabled=false){
  const b=document.createElement('button');b.type='button';b.textContent=text;b.className=className;b.disabled=busy||disabled;b.addEventListener('click',onClick);return b;
 }
-function setMessage(message){el.statusMessage.textContent=message;}
+function setMessage(message){el.statusMessage.textContent=message;el.statusMessage.classList.remove("message-pulse");void el.statusMessage.offsetWidth;el.statusMessage.classList.add("message-pulse");}
+function sprite(name,alt=""){const img=document.createElement("img");img.src=`./assets/crops/${name}.svg`;img.alt=alt;img.className="pixel-sprite";img.width=80;img.height=80;img.decoding="async";return img;}
 function adopt(data){if(data.state)state=data.state;if(Number.isFinite(data.serverTime))serverOffset=data.serverTime-Date.now();}
 async function request(action,payload={}){
  if(busy)return;busy=true;render();
@@ -19,7 +20,7 @@ async function request(action,payload={}){
 }
 function renderChoices(){el.cropChoices.replaceChildren();for(const id of core.IDS){
  const crop=core.CROPS[id],b=button('',`crop-choice${id===selectedCropId?' selected':''}`,()=>{selectedCropId=id;setMessage(`已選擇${crop.name}，剩餘種子 ${state.seeds[id]} 顆。`);renderChoices();});
- b.setAttribute('aria-pressed',String(id===selectedCropId));const sym=document.createElement('span');sym.className='crop-icon';sym.textContent=crop.icon;
+ b.setAttribute('aria-pressed',String(id===selectedCropId));const sym=document.createElement('span');sym.className='crop-icon';sym.append(sprite(id,''));
  const wrapper=document.createElement('span'),name=document.createElement('strong'),small=document.createElement('small');name.textContent=crop.name;small.textContent=`${crop.growMs/1000} 秒 · 種子 ${state.seeds[id]} 顆`;wrapper.append(name,small);b.append(sym,wrapper);el.cropChoices.append(b);
 }}
 function renderFarm(){if(!state)return;const fragment=document.createDocumentFragment();let growing=0;for(let index=0;index<state.plots.length;index++){
@@ -28,10 +29,10 @@ function renderFarm(){if(!state)return;const fragment=document.createDocumentFra
   if(phase==='empty')request('plant',{index,cropId:selectedCropId});else request('harvest',{index});
  });
  const sym=document.createElement('span'),label=document.createElement('small');sym.className='plant';
- if(phase==='empty'){sym.textContent='·';label.textContent='可播種';b.setAttribute('aria-label',`第 ${index+1} 格空地，播種${core.CROPS[selectedCropId].name}`);}
- else if(phase==='mature'){sym.textContent=crop.icon;label.textContent='收成！';b.setAttribute('aria-label',`第 ${index+1} 格${crop.name}已成熟，點擊收成`);}
- else{growing++;sym.textContent=phase==='seed'?'🌰':phase==='sprout'?'🌱':'🌿';const left=core.secondsLeft(plot,now());label.textContent=`${crop.name} ${left}秒`;b.setAttribute('aria-label',`第 ${index+1} 格${crop.name}成長中，剩 ${left} 秒`);}
- b.append(sym,label);fragment.append(b);
+ if(phase==='empty'){sym.textContent='+';label.textContent='可播種';b.setAttribute('aria-label',`第 ${index+1} 格空地，播種${core.CROPS[selectedCropId].name}`);}
+ else if(phase==='mature'){sym.append(sprite(plot.cropId,''));label.textContent='收成！';b.setAttribute('aria-label',`第 ${index+1} 格${crop.name}已成熟，點擊收成`);}
+ else{growing++;sym.append(sprite(phase==='seed'?'seed':phase==='sprout'?'sprout':'growth',''));const left=core.secondsLeft(plot,now());label.textContent=`${crop.name} ${left}秒`;b.setAttribute('aria-label',`第 ${index+1} 格${crop.name}成長中，剩 ${left} 秒`);}
+ b.dataset.plotIndex=String(index);b.append(sym,label);fragment.append(b);
  }el.farmGrid.replaceChildren(fragment);el.growingCount.textContent=String(growing);
 }
 function renderEconomy(){el.shopList.replaceChildren();el.inventoryList.replaceChildren();for(const id of core.IDS){
