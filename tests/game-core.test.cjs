@@ -1,0 +1,13 @@
+'use strict';
+const {test}=require('node:test');const assert=require('node:assert/strict');
+const g=require('../public/game-core.js');
+test('初始農場及 16 格',()=>{const s=g.initialState();assert.equal(s.coins,120);assert.equal(s.seeds.carrot,3);assert.equal(s.plots.length,16);assert.equal(s.harvestedCount,0);});
+test('購買種子扣款、更新庫存與紀錄',()=>{let s=g.initialState();const r=g.buy(s,'potato',2,100);assert.equal(r.ok,true);assert.equal(r.state.coins,92);assert.equal(r.state.seeds.potato,2);assert.equal(r.state.spent,28);assert.equal(r.state.transactions[0].delta,-28);assert.equal(s.coins,120);});
+test('金幣不足及非法數量不得變更狀態',()=>{const s=g.initialState();assert.equal(g.buy(s,'tomato',99).ok,false);assert.equal(g.buy(s,'carrot',-1).ok,false);assert.equal(g.buy(s,'carrot',1.5).ok,false);assert.equal(s.coins,120);});
+test('播種扣種子，不可重複種植',()=>{let s=g.initialState();let r=g.plant(s,0,'carrot',1000);assert.equal(r.ok,true);s=r.state;assert.equal(s.seeds.carrot,2);assert.equal(g.plant(s,0,'carrot',1001).ok,false);assert.equal(s.plantedCount,1);});
+test('種植庫存不足不可播種',()=>{const s=g.initialState();assert.equal(g.plant(s,1,'tomato',0).ok,false);assert.equal(g.plant(s,100,'carrot',0).ok,false);});
+test('作物分四階段，成熟時間因作物而異',()=>{let s=g.plant(g.initialState(),0,'carrot',1000).state;assert.equal(g.stage(s.plots[0],1000),'seed');assert.equal(g.stage(s.plots[0],4000),'sprout');assert.equal(g.stage(s.plots[0],8000),'growing');assert.equal(g.stage(s.plots[0],11000),'mature');assert.equal(g.CROPS.potato.growMs,18000);assert.equal(g.CROPS.tomato.growMs,30000);});
+test('未成熟不可收成；成熟入庫並防止重複收成',()=>{let s=g.plant(g.initialState(),0,'carrot',100).state;assert.equal(g.harvest(s,0,500).ok,false);let r=g.harvest(s,0,10100);assert.equal(r.ok,true);s=r.state;assert.equal(s.produce.carrot,1);assert.equal(s.harvestedCount,1);assert.equal(g.harvest(s,0,10101).ok,false);assert.equal(s.produce.carrot,1);});
+test('販售扣庫存、增加金幣；不得超賣',()=>{let s=g.plant(g.initialState(),0,'carrot',0).state;s=g.harvest(s,0,10000).state;const r=g.sell(s,'carrot',1,20000);assert.equal(r.ok,true);assert.equal(r.state.coins,134);assert.equal(r.state.earned,14);assert.equal(r.state.produce.carrot,0);assert.equal(g.sell(r.state,'carrot',1).ok,false);assert.equal(r.state.coins,134);});
+test('完整循環：買種子、播種、收成、販售',()=>{let s=g.buy(g.initialState(),'tomato',1,0).state;s=g.plant(s,1,'tomato',100).state;s=g.harvest(s,1,30100).state;s=g.sell(s,'tomato',1,30200).state;assert.equal(s.coins,138);assert.equal(s.earned-s.spent,18);assert.equal(s.transactions.length,2);});
+test('初始狀態隔離，重設建立乾淨的新局',()=>{let s=g.buy(g.initialState(),'carrot',1).state;s=g.initialState();assert.equal(s.coins,120);assert.equal(s.transactions.length,0);});

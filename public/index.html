@@ -1,45 +1,28 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#173c33">
-  <meta name="description" content="Pixel Farm v0.2.0：種植胡蘿蔔、馬鈴薯、番茄的像素風格農場原型。">
-  <title>Pixel Farm | v0.2.0</title>
-  <link rel="stylesheet" href="./style.css">
-  <script src="./script.js" defer></script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#173c33">
+<meta name="description" content="Pixel Farm v0.3.0：農場種植、種子商店、背包與金幣經濟循環。">
+<title>Pixel Farm | v0.3.0</title>
+<link rel="stylesheet" href="./style.css">
+<script src="./game-core.js" defer></script><script src="./script.js" defer></script>
 </head>
-<body>
-  <main class="layout">
-    <header class="topbar">
-      <div><p class="eyebrow">PROJECT 02 / CROP GROWTH SYSTEM</p><h1>🌱 Pixel Farm</h1><p class="subtitle">選擇種子，看著三種作物慢慢成長。</p></div>
-      <span class="version">v0.2.0</span>
-    </header>
-    <section class="dashboard" aria-label="遊戲統計">
-      <div class="stat"><span>🌱 播種次數</span><strong id="plantedCount">0</strong></div>
-      <div class="stat"><span>🧺 收成數量</span><strong id="harvestedCount">0</strong></div>
-      <div class="stat"><span>🌾 成長中</span><strong id="growingCount">0</strong></div>
-    </section>
-    <section class="selector-panel" aria-labelledby="cropHeading">
-      <div class="section-title"><div><p class="eyebrow">SEED SELECTION</p><h2 id="cropHeading">今天要種什麼？</h2></div><span class="tip">選擇作物後再點空地</span></div>
-      <div class="crop-choices" id="cropChoices" role="group" aria-label="選擇作物"></div>
-    </section>
-    <div class="content">
-      <section class="farm-panel" aria-labelledby="farmHeading">
-        <div class="section-title"><div><p class="eyebrow">YOUR LITTLE FARM</p><h2 id="farmHeading">我的 4 × 4 農田</h2></div><span class="tip">點擊格子操作</span></div>
-        <div class="farm-scene"><div id="farmGrid" class="farm-grid" role="group" aria-label="16 格農田"></div></div>
-        <div class="legend"><span>🟫 空地</span><span>🌰 種子</span><span>🌱 幼苗</span><span>🌿 成長中</span><span>🧺 可收成</span></div>
-      </section>
-      <aside class="side-panel" aria-label="農夫手冊與收成紀錄">
-        <h2>🧺 農夫手冊</h2>
-        <ol><li>先選擇胡蘿蔔、馬鈴薯或番茄。</li><li>點選空地播種，觀察四個成長階段。</li><li>成熟後點擊作物，就能收成並清空格子。</li></ol>
-        <div class="harvest-box"><h3>收成紀錄</h3><div id="harvestSummary" class="harvest-summary"></div></div>
-        <div class="hint"><strong>🌤️ 小提醒</strong><p>成熟時間採實際經過的時間計算。離開頁面時農場不會儲存，重新整理將重新開始。商店、背包及 SQLite 將於後續版本加入。</p></div>
-        <button id="resetButton" class="reset" type="button">↻ 重設農場</button>
-        <p id="statusMessage" class="status" role="status" aria-live="polite">選一種作物，開始耕種吧！</p>
-      </aside>
-    </div>
-    <footer>Pixel Farm v0.2.0 · Frontend prototype · HTML / CSS / JavaScript</footer>
-  </main>
-</body>
-</html>
+<body><main class="layout">
+<header class="topbar"><div><p class="eyebrow">PROJECT 02 / SHOP & ECONOMY</p><h1>🌱 Pixel Farm</h1><p class="subtitle">種植、收成、販售，再用金幣擴大農場。</p></div><span class="version">v0.3.0</span></header>
+<section class="dashboard" aria-label="遊戲數據">
+<div class="stat"><span>🪙 金幣餘額</span><strong id="coinCount">120</strong></div><div class="stat"><span>🌱 播種次數</span><strong id="plantedCount">0</strong></div><div class="stat"><span>🧺 收成總數</span><strong id="harvestedCount">0</strong></div><div class="stat"><span>🌾 成長中</span><strong id="growingCount">0</strong></div>
+</section>
+<section class="selector-panel" aria-labelledby="cropHeading"><div class="section-title"><div><p class="eyebrow">SEED SELECTION</p><h2 id="cropHeading">今天要種什麼？</h2></div><span class="tip">先選種子，再點擊空地</span></div><div class="crop-choices" id="cropChoices" role="group" aria-label="選擇作物"></div></section>
+<div class="content"><section class="farm-panel" aria-labelledby="farmHeading"><div class="section-title"><div><p class="eyebrow">YOUR LITTLE FARM</p><h2 id="farmHeading">我的 4 × 4 農田</h2></div><span class="tip">點擊格子操作</span></div><div class="farm-scene"><div id="farmGrid" class="farm-grid" role="group" aria-label="16 格農田"></div></div><div class="legend"><span>🟫 空地</span><span>🌰 種子</span><span>🌱 幼苗</span><span>🌿 成長中</span><span>🧺 可收成</span></div></section>
+<aside class="side-panel" aria-label="農夫手冊及經濟紀錄"><h2>📒 農場經營手冊</h2><ol><li>先選作物，背包內必須有種子。</li><li>購買種子會扣除金幣；播種消耗一顆種子。</li><li>成熟後收成會放進背包；販售收成物取得金幣。</li></ol>
+<div class="harvest-box"><h3>📊 經營統計</h3><div class="harvest-summary"><div class="harvest-item"><span>累計購買支出</span><strong id="spentValue">0</strong></div><div class="harvest-item"><span>累計販售收入</span><strong id="earnedValue">0</strong></div><div class="harvest-item"><span>已實現淨現金流（收入－支出）</span><strong id="profitValue">0</strong></div></div><p class="fineprint">此處為現金流，非會計利潤；未售出的作物與剩餘種子尚未估值。</p></div>
+<div class="hint"><strong>🌤️ v0.3.0 暫存說明</strong><p>遊戲資料僅存在目前網頁記憶體中，重新整理會重置。v0.4.0 才會導入後端 SQLite 存檔與交易驗證。</p></div>
+<button id="resetButton" class="reset" type="button">↻ 重設整座農場</button>
+<p id="statusMessage" class="status" role="status" aria-live="polite">初始資金 120 金幣，贈送 3 顆胡蘿蔔種子。開始種植吧！</p>
+</aside></div>
+<section class="economy" aria-label="商店與背包"><section class="farm-panel"><div class="section-title"><div><p class="eyebrow">GENERAL STORE</p><h2>🛒 種子商店</h2></div><span class="tip">每次購買 1 或 5 顆</span></div><div id="shopList" class="economy-list"></div></section>
+<section class="farm-panel"><div class="section-title"><div><p class="eyebrow">INVENTORY</p><h2>🎒 背包與販售</h2></div><span class="tip">收成後才能販售</span></div><div id="inventoryList" class="economy-list"></div></section></section>
+<section class="farm-panel ledger" aria-labelledby="ledgerHeading"><div class="section-title"><div><p class="eyebrow">TRANSACTION HISTORY</p><h2 id="ledgerHeading">📋 交易紀錄</h2></div><span class="tip">本局最近 20 筆</span></div><div id="transactionList" class="transaction-list"></div></section>
+<footer>Pixel Farm v0.3.0 · Frontend prototype · HTML / CSS / JavaScript</footer>
+</main></body></html>
