@@ -1,0 +1,8 @@
+'use strict';
+const {test}=require('node:test');const assert=require('node:assert/strict');const core=require('../public/game-core.js');const {openDatabase,readState,transact,reset}=require('../server/database.cjs');
+function db(){return openDatabase(':memory:');}
+test('initial state persisted in SQLite',()=>{const x=db();assert.equal(readState(x).coins,120);assert.equal(readState(x).plots.length,16);x.close();});
+test('buy, plant, harvest, sell atomically persisted',()=>{const x=db();assert.equal(transact(x,s=>core.buy(s,'tomato',1,0),0).ok,true);assert.equal(transact(x,s=>core.plant(s,0,'tomato',100),100).ok,true);assert.equal(transact(x,s=>core.harvest(s,0,30100),30100).ok,true);assert.equal(transact(x,s=>core.sell(s,'tomato',1,30200),30200).ok,true);const s=readState(x);assert.equal(s.coins,138);assert.equal(s.transactions.length,2);assert.equal(s.produce.tomato,0);x.close();});
+test('rejected operations do not change balances',()=>{const x=db();const before=readState(x);assert.equal(transact(x,s=>core.buy(s,'tomato',99,0),0).ok,false);assert.deepEqual(readState(x),before);x.close();});
+test('cannot harvest twice',()=>{const x=db();transact(x,s=>core.plant(s,0,'carrot',100),100);assert.equal(transact(x,s=>core.harvest(s,0,10100),10100).ok,true);assert.equal(transact(x,s=>core.harvest(s,0,10200),10200).ok,false);assert.equal(readState(x).harvestedCount,1);x.close();});
+test('reset returns initial coins, plots and clears ledger',()=>{const x=db();transact(x,s=>core.buy(s,'carrot',1,1),1);reset(x);assert.equal(readState(x).coins,120);assert.equal(readState(x).transactions.length,0);x.close();});
