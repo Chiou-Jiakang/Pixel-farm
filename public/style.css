@@ -32,3 +32,17 @@ button:focus-visible{outline:3px solid #fff1a0;outline-offset:3px}
 @media(max-width:720px){.topbar{padding:15px}.plot .plant{min-height:32px}.pixel-sprite{width:clamp(27px,9vw,48px)}.crop-icon .pixel-sprite{width:40px}}
 @media(max-width:420px){.pixel-sprite{width:30px}.plot .plant{min-height:26px}.plot{min-width:0}.plot small{font-size:.55rem}}
 @media(prefers-reduced-motion:reduce){.plot .pixel-sprite,.message-pulse{animation:none!important}.plot,.action-button{transition:none!important}}
+
+/* v0.5.0-alpha.2 — stage-only transitions and action effects */
+.farm-effects{position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden}
+.farm-fx{position:absolute;transform:translate(-50%,-50%);font-size:1rem;font-weight:900;white-space:nowrap;color:#ffefb4;text-shadow:0 2px 2px #223c2a;animation:fx-float .85s ease-out forwards}
+.farm-fx--coins{color:#ffe092}
+@keyframes fx-float{0%{opacity:0;transform:translate(-50%,0) scale(.8)}25%{opacity:1}100%{opacity:0;transform:translate(-50%,-65px) scale(1.12)}}
+.plot.stage-transition .plant{animation:phase-in .36s cubic-bezier(.2,.75,.2,1) both}
+.plot.action-seed{animation:seed-bump .32s ease-out}
+.plot.action-harvest{animation:harvest-bump .32s ease-out}
+@keyframes phase-in{from{opacity:.3;transform:translateY(9px) scale(.72)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes seed-bump{0%,100%{filter:brightness(1)}40%{filter:brightness(1.5);transform:scale(.94)}}
+@keyframes harvest-bump{0%,100%{filter:brightness(1)}45%{filter:brightness(1.4);transform:scale(1.05)}}
+.plot.mature{box-shadow:inset 0 3px #bd9266,0 5px 0 #4d3426,0 0 0 2px #f8d77b!important}
+@media(prefers-reduced-motion:reduce){.plot.stage-transition .plant,.plot.action-seed,.plot.action-harvest,.farm-fx{animation:none!important}.farm-fx{display:none}}
