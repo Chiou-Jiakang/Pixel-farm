@@ -46,3 +46,8 @@ button:focus-visible{outline:3px solid #fff1a0;outline-offset:3px}
 @keyframes harvest-bump{0%,100%{filter:brightness(1)}45%{filter:brightness(1.4);transform:scale(1.05)}}
 .plot.mature{box-shadow:inset 0 3px #bd9266,0 5px 0 #4d3426,0 0 0 2px #f8d77b!important}
 @media(prefers-reduced-motion:reduce){.plot.stage-transition .plant,.plot.action-seed,.plot.action-harvest,.farm-fx{animation:none!important}.farm-fx{display:none}}
+
+/* v0.5.0-alpha.3 sound controls */
+.sound-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 18px;padding:11px 16px;margin:22px 0 -12px;border:1px solid #598064;border-radius:12px;background:#21483b}
+.sound-controls{display:flex;align-items:center;flex-wrap:wrap;gap:12px}.sound-controls button{border:1px solid #d9c389;background:#355f48;color:#f9efcb;padding:9px 13px;border-radius:7px;font:inherit;font-size:.86rem;font-weight:750;cursor:pointer}.sound-controls button[aria-pressed=true]{background:#4d4032}.sound-controls label,.sound-controls output{font-size:.85rem}.sound-controls input{width:150px;accent-color:#f2d382}.sound-toolbar .fineprint{margin:0}
+@media(max-width:500px){.sound-controls{width:100%}.sound-controls input{flex:1;width:75px}.sound-toolbar .fineprint{font-size:.69rem}}

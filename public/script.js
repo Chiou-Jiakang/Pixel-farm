@@ -1,6 +1,8 @@
 'use strict';
-// v0.5.0-alpha.2: server-authoritative actions; transient animation never changes game state.
+// v0.5.0-alpha.3: server-authoritative actions; transient animation never changes game state.
 const core=window.FarmCore;
+const soundRules=window.FarmSoundCore, farmAudio=window.FarmAudio;
+let suppressMatureSounds=true;
 let state=null, selectedCropId='carrot', serverOffset=0, busy=false;
 const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
 const lastPhase=new Map();
@@ -29,8 +31,17 @@ function flashPlot(index,kind){
  plot.addEventListener('animationend',()=>plot.classList.remove(`action-${kind}`),{once:true});
 }
 
-const el=Object.fromEntries(['farmGrid','cropChoices','plantedCount','harvestedCount','growingCount','coinCount','statusMessage','resetButton','spentValue','earnedValue','profitValue','shopList','inventoryList','transactionList'].map(id=>[id,document.getElementById(id)]));
+const el=Object.fromEntries(['farmGrid','cropChoices','plantedCount','harvestedCount','growingCount','coinCount','statusMessage','resetButton','spentValue','earnedValue','profitValue','shopList','inventoryList','transactionList','muteButton','soundVolume','volumeValue'].map(id=>[id,document.getElementById(id)]));
 function now(){return Date.now()+serverOffset;}
+function syncSoundControls(){
+ const settings=farmAudio.getSettings();
+ el.muteButton.textContent=settings.muted?'🔇 音效關閉':'🔊 音效開啟';
+ el.muteButton.setAttribute('aria-pressed',String(settings.muted));
+ el.soundVolume.value=String(Math.round(settings.volume*100));
+ el.volumeValue.textContent=`${Math.round(settings.volume*100)}%`;
+}
+function playSound(event){farmAudio.play(event);}
+
 function button(text,className,onClick,disabled=false){
  const b=document.createElement('button');b.type='button';b.textContent=text;b.className=className;b.disabled=busy||disabled;b.addEventListener('click',onClick);return b;
 }
@@ -45,17 +56,18 @@ async function request(action,payload={}){
  try{
   const response=await fetch(`/api/game/${action}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),cache:'no-store'});
   const data=await response.json();
-  if(!response.ok||data.error){adopt(data);setMessage(data.message||data.error||'操作未成功。');return;}
+  if(!response.ok||data.error){adopt(data);setMessage(data.message||data.error||'操作未成功。');playSound('error');return;}
   const oldCoins=state?.coins;
   adopt(data);
   setMessage(data.message||'操作完成。');
   render();
+  playSound(soundRules.soundForAction(action,true));
   if(action==='plant')flashPlot(payload.index,'seed');
   if(action==='harvest'){effectAt(target,'✦ +1','harvest');flashPlot(payload.index,'harvest');}
   if((action==='buy'||action==='sell')&&oldCoins!=null&&state?.coins!==oldCoins){
     effectAt(el.coinCount,`${state.coins-oldCoins>0?'+':''}${state.coins-oldCoins} 🪙`,'coins');
   }
- }catch(e){setMessage('連線失敗：請確認伺服器正在執行，並重新整理頁面。');}
+ }catch(e){setMessage('連線失敗：請確認伺服器正在執行，並重新整理頁面。');playSound('error');}
  finally{busy=false;render();}
 }
 function renderChoices(){el.cropChoices.replaceChildren();for(const id of core.IDS){
@@ -80,12 +92,12 @@ function renderFarm(){
     const current=state.plots[index],currentPhase=core.stage(current,now());
     if(currentPhase==='empty')request('plant',{index,cropId:selectedCropId});
     else if(currentPhase==='mature')request('harvest',{index});
-    else setMessage('作物尚未成熟，請再等一下。');
+    else {setMessage('作物尚未成熟，請再等一下。');playSound('error');}
    });
   }
   const previous=lastPhase.get(index);
   const changed=previous!==key;
-  b.className=`plot ${phase}`;
+  b.className=`plot ${phase}`; // Stage class update; action FX uses separate overlay and re-added on next user action.
   b.disabled=busy;
   const sym=b.firstElementChild,label=b.lastElementChild;
   if(phase==='empty'){
@@ -103,6 +115,7 @@ function renderFarm(){
    label.textContent=`${crop.name} ${left}秒`;
    b.setAttribute('aria-label',`第 ${index+1} 格${crop.name}成長中，剩 ${left} 秒`);
   }
+  if(soundRules.newlyMature(previous?.split(':')[0],phase) && !suppressMatureSounds)playSound('mature');
   if(changed && hasRenderedFarm && previous!==undefined && !reduceMotion.matches){
    b.classList.remove('stage-transition');
    void b.offsetWidth;
@@ -123,6 +136,12 @@ function renderEconomy(){el.shopList.replaceChildren();el.inventoryList.replaceC
  for(const tx of state.transactions){const line=document.createElement('div');line.className='transaction';const name=document.createElement('span');name.textContent=`${tx.detail} · ${new Date(tx.at).toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}`;const val=document.createElement('strong');val.className=tx.delta>0?'positive':'negative';val.textContent=`${tx.delta>0?'+':''}${tx.delta} 🪙`;line.append(name,val);el.transactionList.append(line);}
 }
 function render(){if(!state)return;el.coinCount.textContent=state.coins;el.plantedCount.textContent=state.plantedCount;el.harvestedCount.textContent=state.harvestedCount;el.spentValue.textContent=`🪙 ${state.spent}`;el.earnedValue.textContent=`🪙 ${state.earned}`;el.profitValue.textContent=`🪙 ${state.earned-state.spent}`;el.resetButton.disabled=busy;renderChoices();renderFarm();renderEconomy();}
+el.muteButton.addEventListener('click',()=>{farmAudio.activate();farmAudio.setMuted(!farmAudio.getSettings().muted);syncSoundControls();if(!farmAudio.getSettings().muted)playSound('buy');});
+el.soundVolume.addEventListener('input',()=>{farmAudio.activate();farmAudio.setVolume(Number(el.soundVolume.value)/100);syncSoundControls();});
+// Resume audio context only after an explicit pointer/keyboard action (browser autoplay policy).
+document.addEventListener('pointerdown',()=>farmAudio.activate(),{capture:true});
+document.addEventListener('keydown',()=>farmAudio.activate(),{capture:true});
+syncSoundControls();
 el.resetButton.addEventListener('click',()=>{if(window.confirm('要重設農場嗎？資料庫中的金幣、作物、庫存與交易紀錄都會被清空！'))request('reset');});
-async function refresh(){if(busy)return;try{const response=await fetch('/api/game',{cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);adopt(await response.json());render();}catch(e){setMessage('目前無法連線至伺服器。請在 Pixel-farm 根目錄執行 npm start。');}}
+async function refresh(){if(busy)return;try{const response=await fetch('/api/game',{cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);adopt(await response.json());render();suppressMatureSounds=false;}catch(e){setMessage('目前無法連線至伺服器。請在 Pixel-farm 根目錄執行 npm start。');}}
 setMessage('正在載入 SQLite 存檔…');refresh();setInterval(()=>{if(!busy)renderFarm();},500);setInterval(refresh,15000);
