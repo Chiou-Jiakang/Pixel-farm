@@ -1,3 +1,50 @@
+# Pixel Farm｜像素農場經營遊戲（v0.5.0-beta.1）
+
+> **目前狀態：beta.1 候選版本，功能開發分支 `feature/pixel-farm-beta1`；尚未合併至 `main` 或發布正式 Release。** 下方保留 v0.4.0 歷史 README，供追溯舊版資訊；如有衝突，請以本節最新說明為準。
+
+Pixel Farm 為單人本機全端像素農場遊戲，使用 HTML、CSS、JavaScript、Node.js、Express 與 SQLite。玩家可以選擇三種作物、在 4×4 農田播種與收成，於商店購買種子、背包販售作物，並查閱交易紀錄。伺服器負責交易驗證與持久化；前端提供成長動畫、音效以及響應式介面。
+
+## beta.1 重點
+
+- 行動版四分頁：**農田／商店／背包／紀錄**；行動分頁顯示與桌面完整布局切換。
+- 手機 390 × 844 的精簡版排版：頂部音效、金幣及統計區壓縮，三種作物橫向排列；保留 16 格農田可操作性。
+- 農田優先的資訊架構：次要經營資訊在手機版歸入紀錄分頁，桌面版保留原側欄。
+- 延續 Web Audio API 操作回饋、靜音與音量偏好，以及 SQLite 本機存檔。
+- **31 項本機 Node 測試全數通過（使用者於 2026-10-23 回報）**；這不是跨裝置全面驗收。
+
+## 本機執行
+
+```powershell
+cd "C:\Users\jerry chiou\OneDrive\Desktop\Pixel-farm-beta1"
+npm ci
+npm test
+npm start
+```
+
+在 Edge／Chrome 開啟 `http://127.0.0.1:3000`。不要以 `file://` 直接開啟 HTML；本版需要 Express API 與 SQLite。開發用 Node 需支援 `node:sqlite`（`package.json` 要求 Node >=22.13.0）。伺服器保持運行才能連線；停止請按 `Ctrl + C`。
+
+## 使用方式
+
+1. 選擇胡蘿蔔／馬鈴薯／番茄；需要先有種子。
+2. 點農田空格播種；分別需 10／18／30 秒成熟，成熟後點擊收成。
+3. 商店可購買 1 或 5 顆種子；背包可出售收成物；紀錄可查看交易及經營資料。
+4. 遊戲進度存在本機 SQLite；重新整理不應清空資料。重設農場會清除進度，請謹慎操作。
+
+## 測試與開發狀態
+
+- Commit #1：`6287857` 響應式 UI；Commit #2：`22c8f09` 四分頁；Commit #3：`9e9d11d` 資訊架構精修，皆已推送至功能分支。
+- `npm test`：31/31 通過；`git diff --check` 未見格式錯誤（截至 2026-10-23 使用者提供之終端機截圖）。
+- 用戶回報四個手機分頁的操作正常；但**尚需最終跨尺寸回歸、存檔確認與發布檢查**，不得視為 beta.1 已正式發布。
+- 詳見 `docs/TESTING.md`、`docs/ROADMAP.md` 與 `docs/RELEASE_NOTES_v0.5.0-beta.1.md`。
+
+## 原始架構與歷史
+
+目前程式另包含 `public/beta1.css`、`public/beta1.js`、`public/mobile-tabs.css`、`public/mobile-tabs.js`，以及對應測試。`data/` 的實際 SQLite 存檔與 `node_modules/` **不得提交 Git**。
+
+---
+
+## 歷史內容：v0.4.0 README（原文保留）
+
 # Pixel Farm｜像素農場經營遊戲
 
 **目前工作版本：v0.4.0 — Backend & Database（已完成本機測試與持久化驗收，待 GitHub 發布）**
