@@ -1,5 +1,27 @@
 # CHANGELOG｜Pixel Farm 版本更新日誌
 
+## [0.5.0-beta.1] — 2026-10-23（開發分支已推送；尚未發布 Release）
+
+### Added
+- 手機農田、商店、背包、交易紀錄四分頁，以及底部導覽。
+- `mobile-tabs.css`、`mobile-tabs.js`、`mobile-tabs.test.cjs` 等手機版相關檔案。
+- 新增行動分頁與資訊區配置自動化檢查。
+
+### Changed
+- 小螢幕精簡標題、音效、統計及作物卡片布局，提高農田優先度。
+- 手機版將次要資訊整合到紀錄分頁；桌面版維持原有側欄呈現。
+- 保留 Express、SQLite、原子交易、動畫與音效機制，未修改資料庫 Schema。
+
+### Verification
+- 使用者 2026-10-23 提供 `npm test` 結果：31/31 通過、0 失敗。
+- Git Commit `6287857`、`22c8f09`、`9e9d11d` 已推送 `feature/pixel-farm-beta1`。
+- 手機四分頁操作已有使用者確認；尚未完成正式跨尺寸／全流程驗收及 Release。
+
+### Known limitations
+- 本機單人使用、無登入或雲端同步；不能視為可直接公開部署的服務。
+- beta.1 仍為 Draft PR 開發階段，不等同於正式穩定版。
+
+
 ## [Unreleased]
 - 尚無其他已確認完成但未納入版本的功能。下一階段 v0.5.0 屬規劃。
 

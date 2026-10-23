@@ -1,0 +1,295 @@
+/* Mobile-only tabs. Existing desktop styles and server-owned game state are untouched. */
+@media (max-width: 720px) {
+  .layout {
+    padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+  }
+  .mobile-jump {
+    position: fixed;
+    z-index: 90;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: min(100%, 720px);
+    box-sizing: border-box;
+    margin: 0;
+    padding: 9px 12px calc(9px + env(safe-area-inset-bottom, 0px));
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 7px;
+    background: #19372f;
+    border-top: 1px solid #77917e;
+    box-shadow: 0 -7px 24px rgba(0, 0, 0, 0.25);
+  }
+  .mobile-jump a {
+    min-height: 48px;
+    padding: 5px 2px;
+    box-sizing: border-box;
+    background: #315845;
+    color: #fff3ce;
+    border: 1px solid #63836d;
+    font-size: clamp(0.68rem, 2.75vw, 0.88rem);
+    line-height: 1.25;
+  }
+  .mobile-jump a.is-active,
+  .mobile-jump a[aria-current="page"] {
+    background: #f8e7b5;
+    color: #312915;
+    border-color: #f8e7b5;
+    box-shadow: inset 0 -3px 0 #bd9d55;
+  }
+  .mobile-jump a:focus-visible {
+    outline: 3px solid #fff7d2;
+    outline-offset: 2px;
+  }
+  .content {
+    display: block;
+  }
+  .economy {
+    display: block;
+  }
+  .economy > .farm-panel {
+    margin-bottom: 0;
+  }
+  /* Hidden must beat author display:grid/flex overrides. */
+  .layout [hidden] {
+    display: none !important;
+  }
+  #seedSelection,
+  .content > .farm-panel,
+  .economy > .farm-panel,
+  .ledger {
+    scroll-margin-top: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mobile-jump a {
+    transition: none !important;
+  }
+}
+
+/* Pixel Farm beta.1 — Compact Mobile Layout */
+/* Only applies to small mobile screens. */
+
+@media screen and (max-width: 420px) {
+  .layout {
+    padding-top: 6px;
+  }
+
+  .topbar {
+    padding: 10px 12px;
+    gap: 5px;
+  }
+
+  .topbar h1 {
+    font-size: 1.45rem;
+    line-height: 1.2;
+  }
+
+  .topbar .eyebrow,
+  .topbar .subtitle {
+    display: none;
+  }
+
+  .sound-toolbar {
+    padding: 7px 10px;
+  }
+
+  .sound-toolbar .fineprint {
+    display: none;
+  }
+
+  .dashboard {
+    gap: 5px;
+  }
+
+  .stat {
+    padding: 7px 9px;
+  }
+
+  .stat span {
+    font-size: 0.68rem;
+  }
+
+  .stat strong {
+    font-size: 1.15rem;
+  }
+
+  .selector-panel {
+    padding: 9px;
+  }
+
+  .crop-choices {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .crop-choice {
+    min-width: 0;
+    padding: 7px 3px;
+    min-height: 70px;
+    flex-direction: column;
+    text-align: center;
+    gap: 3px;
+  }
+
+  .crop-choice strong {
+    font-size: 0.75rem;
+  }
+
+  .crop-choice small {
+    font-size: 0.65rem;
+  }
+
+  .section-title {
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+}
+
+/* =========================================
+   Pixel Farm beta.1 — Commit #3
+   Mobile Farm First-Screen Optimization
+   ========================================= */
+
+@media screen and (max-width: 420px) {
+  /* Reduce unnecessary vertical spacing */
+  .layout {
+    padding-top: 4px;
+  }
+
+  .topbar {
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    align-items: center;
+  }
+
+  .topbar h1 {
+    font-size: 1.4rem;
+  }
+
+  /* Compact sound controls */
+  .sound-toolbar {
+    margin: 8px 0;
+    padding: 6px 8px;
+  }
+
+  .sound-controls {
+    gap: 6px;
+  }
+
+  .sound-controls button {
+    padding: 6px 8px;
+    min-height: 40px;
+  }
+
+  /* Four statistics in one row */
+  .dashboard {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    margin: 8px 0;
+  }
+
+  .stat {
+    min-width: 0;
+    padding: 8px 3px;
+    gap: 5px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .stat span {
+    font-size: 0.65rem;
+    line-height: 1.35;
+  }
+
+  .stat strong {
+    font-size: 1.1rem;
+  }
+
+  /* Compact seed selection */
+  .selector-panel {
+    margin-bottom: 9px;
+    padding: 9px;
+  }
+
+  .crop-choices {
+    gap: 5px;
+  }
+
+  .crop-choice {
+    min-height: 74px;
+    padding: 6px 2px;
+  }
+
+  /* Preserve comfortable farm interaction */
+  .content {
+    gap: 8px;
+  }
+
+  .content > .farm-panel {
+    padding: 10px;
+  }
+
+  .farm-scene {
+    padding: 6px 3px;
+  }
+
+  .farm-grid {
+    gap: 4px;
+  }
+
+  .legend {
+    margin-top: 9px;
+    gap: 5px;
+  }
+
+  /* Secondary farm information */
+  .side-panel {
+    padding: 10px;
+  }
+
+  .farm-guide summary {
+    font-size: 0.95rem;
+  }
+
+  .harvest-box {
+    padding: 10px;
+  }
+
+  .reset {
+    margin-top: 12px;
+  }
+}
+
+/* Commit #3: show secondary information under history only on phones. */
+@media (max-width: 720px) {
+  .ledger > .side-panel { margin-top: 14px; padding: 12px; }
+  .ledger > .side-panel .harvest-box { margin-top: 8px; }
+  .content > .farm-panel > .status { margin: 12px 0 0; }
+  .ledger > .side-panel .hint { margin-top: 10px; }
+}
+@media (max-width: 420px) {
+  .dashboard { margin: 5px 0 8px; }
+  .selector-panel { margin-bottom: 7px; }
+  .content > .farm-panel { padding: 8px; }
+  .farm-scene { padding: 5px 3px; }
+  .legend { margin-top: 7px; gap: 6px; font-size: .7rem; }
+  .section-title .tip { padding: 5px; }
+  .ledger > .side-panel .reset { margin-top: 12px; }
+}
+/* FINAL_MOBILE_SPACING_V1 ??compact spacing without shrinking plot hit targets. */
+@media screen and (max-width: 420px) {
+  .layout { padding-top: 0; }
+  .topbar { padding: 6px 9px; margin-bottom: 4px; }
+  .sound-toolbar { margin: 5px 0; padding: 5px 8px; }
+  .dashboard { margin: 4px 0 5px; gap: 3px; }
+  .stat { padding: 5px 3px; gap: 3px; }
+  .selector-panel { padding: 7px; margin-bottom: 5px; }
+  .selector-panel .section-title { margin-bottom: 5px; }
+  .content > .farm-panel { padding: 6px; }
+  .content > .farm-panel .section-title { margin-bottom: 5px; }
+  .farm-scene { padding: 3px 2px; }
+  .farm-grid { gap: 3px; }
+  .legend { margin-top: 5px; }
+}
