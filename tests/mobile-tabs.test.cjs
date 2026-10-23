@@ -20,14 +20,14 @@ function rig() {
  return {selector,farm,guide,economy,store,inventory,ledger,links,mq};
 }
 test('mobile tab shows farm and hides store, bag and history',()=>{
- const x=rig();assert.equal(x.selector.hidden,false);assert.equal(x.farm.hidden,false);assert.equal(x.guide.hidden,false);
+ const x=rig();assert.equal(x.selector.hidden,false);assert.equal(x.farm.hidden,false);assert.equal(x.guide.hidden,true);
  assert.equal(x.economy.hidden,true);assert.equal(x.ledger.hidden,true);assert.equal(x.links[0].attributes['aria-current'],'page');
 });
 test('store and bag tabs switch without changing document structure',()=>{
  const x=rig();let prevented=false;x.links[1].handlers.click({preventDefault(){prevented=true}});
  assert.ok(prevented);assert.equal(x.economy.hidden,false);assert.equal(x.store.hidden,false);assert.equal(x.inventory.hidden,true);
  x.links[2].handlers.click({preventDefault(){}});assert.equal(x.store.hidden,true);assert.equal(x.inventory.hidden,false);
- x.links[3].handlers.click({preventDefault(){}});assert.equal(x.ledger.hidden,false);assert.equal(x.economy.hidden,true);
+ x.links[3].handlers.click({preventDefault(){}});assert.equal(x.ledger.hidden,false);assert.equal(x.guide.hidden,false);assert.equal(x.economy.hidden,true);
 });
 test('desktop breakpoint restores all original panels',()=>{
  const x=rig();x.links[2].handlers.click({preventDefault(){}});x.mq.matches=false;x.mq.changed();
@@ -37,4 +37,10 @@ test('desktop breakpoint restores all original panels',()=>{
 test('module does not write game state or call network',()=>{
  assert.doesNotMatch(js, /fetch\s*\(|localStorage|indexedDB|\.sqlite|\/api\/|\.innerHTML\s*=/);
  assert.match(css,/prefers-reduced-motion/);assert.match(css,/\[hidden\]/);
+});
+
+test('mobile information stays accessible in history and status stays near farm',()=>{
+ assert.match(js, /ledger\.appendChild\(guide\)/);
+ assert.match(js, /farm\.appendChild\(status\)/);
+ assert.match(js, /guideMarker\.parentNode\.insertBefore\(guide, guideMarker\)/);
 });

@@ -146,3 +146,135 @@
     margin-bottom: 8px;
   }
 }
+
+/* =========================================
+   Pixel Farm beta.1 — Commit #3
+   Mobile Farm First-Screen Optimization
+   ========================================= */
+
+@media screen and (max-width: 420px) {
+  /* Reduce unnecessary vertical spacing */
+  .layout {
+    padding-top: 4px;
+  }
+
+  .topbar {
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    align-items: center;
+  }
+
+  .topbar h1 {
+    font-size: 1.4rem;
+  }
+
+  /* Compact sound controls */
+  .sound-toolbar {
+    margin: 8px 0;
+    padding: 6px 8px;
+  }
+
+  .sound-controls {
+    gap: 6px;
+  }
+
+  .sound-controls button {
+    padding: 6px 8px;
+    min-height: 40px;
+  }
+
+  /* Four statistics in one row */
+  .dashboard {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    margin: 8px 0;
+  }
+
+  .stat {
+    min-width: 0;
+    padding: 8px 3px;
+    gap: 5px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .stat span {
+    font-size: 0.65rem;
+    line-height: 1.35;
+  }
+
+  .stat strong {
+    font-size: 1.1rem;
+  }
+
+  /* Compact seed selection */
+  .selector-panel {
+    margin-bottom: 9px;
+    padding: 9px;
+  }
+
+  .crop-choices {
+    gap: 5px;
+  }
+
+  .crop-choice {
+    min-height: 74px;
+    padding: 6px 2px;
+  }
+
+  /* Preserve comfortable farm interaction */
+  .content {
+    gap: 8px;
+  }
+
+  .content > .farm-panel {
+    padding: 10px;
+  }
+
+  .farm-scene {
+    padding: 6px 3px;
+  }
+
+  .farm-grid {
+    gap: 4px;
+  }
+
+  .legend {
+    margin-top: 9px;
+    gap: 5px;
+  }
+
+  /* Secondary farm information */
+  .side-panel {
+    padding: 10px;
+  }
+
+  .farm-guide summary {
+    font-size: 0.95rem;
+  }
+
+  .harvest-box {
+    padding: 10px;
+  }
+
+  .reset {
+    margin-top: 12px;
+  }
+}
+
+/* Commit #3: show secondary information under history only on phones. */
+@media (max-width: 720px) {
+  .ledger > .side-panel { margin-top: 14px; padding: 12px; }
+  .ledger > .side-panel .harvest-box { margin-top: 8px; }
+  .content > .farm-panel > .status { margin: 12px 0 0; }
+  .ledger > .side-panel .hint { margin-top: 10px; }
+}
+@media (max-width: 420px) {
+  .dashboard { margin: 5px 0 8px; }
+  .selector-panel { margin-bottom: 7px; }
+  .content > .farm-panel { padding: 8px; }
+  .farm-scene { padding: 5px 3px; }
+  .legend { margin-top: 7px; gap: 6px; font-size: .7rem; }
+  .section-title .tip { padding: 5px; }
+  .ledger > .side-panel .reset { margin-top: 12px; }
+}

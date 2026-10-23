@@ -10,7 +10,7 @@
   const inventory = document.getElementById('inventoryHeading')?.closest('.farm-panel');
   const ledger = document.querySelector('.farm-panel.ledger');
   if (!nav || !selector || !farm || !guide || !economy || !store || !inventory || !ledger) return;
-  const panels = { farm: [selector, farm, guide], store: [economy, store], bag: [economy, inventory], history: [ledger] };
+  const panels = { farm: [selector, farm], store: [economy, store], bag: [economy, inventory], history: [ledger, guide] };
   const targets = new Map([
     ['#farmHeading', 'farm'], ['#storeHeading', 'store'],
     ['#inventoryHeading', 'bag'], ['#ledgerHeading', 'history']
@@ -20,6 +20,27 @@
   const mobile = window.matchMedia('(max-width: 720px)');
   let active = 'farm';
   const all = [selector, farm, guide, economy, store, inventory, ledger];
+  // COMMIT3_MOBILE_INFO: keep feedback by farm; show supporting information in history.
+  const status = document.getElementById('statusMessage');
+  const canRelocate = typeof document.createComment === 'function' && guide.parentNode && status?.parentNode;
+  let guideMarker = null;
+  let statusMarker = null;
+  if (canRelocate) {
+    guideMarker = document.createComment('side-panel original position');
+    statusMarker = document.createComment('status original position');
+    guide.parentNode.insertBefore(guideMarker, guide);
+    status.parentNode.insertBefore(statusMarker, status);
+  }
+  function relocateInfo(isMobile) {
+    if (!canRelocate) return;
+    if (isMobile) {
+      ledger.appendChild(guide);
+      farm.appendChild(status);
+    } else {
+      guideMarker.parentNode.insertBefore(guide, guideMarker);
+      statusMarker.parentNode.insertBefore(status, statusMarker);
+    }
+  }
   // Page anchors are intentionally preserved for no-JavaScript fallback.
   function apply() {
     const isMobile = mobile.matches;
@@ -28,6 +49,7 @@
       const visible = new Set(panels[active]);
       for (const el of all) if (!visible.has(el)) el.hidden = true;
     }
+    relocateInfo(isMobile);
     nav.setAttribute('aria-label', isMobile ? '手機主要遊戲分頁' : '快速前往遊戲區塊');
     for (const link of links) {
       const selected = isMobile && targets.get(link.getAttribute('href')) === active;
