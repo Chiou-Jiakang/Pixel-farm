@@ -278,3 +278,18 @@
   .section-title .tip { padding: 5px; }
   .ledger > .side-panel .reset { margin-top: 12px; }
 }
+/* FINAL_MOBILE_SPACING_V1 ??compact spacing without shrinking plot hit targets. */
+@media screen and (max-width: 420px) {
+  .layout { padding-top: 0; }
+  .topbar { padding: 6px 9px; margin-bottom: 4px; }
+  .sound-toolbar { margin: 5px 0; padding: 5px 8px; }
+  .dashboard { margin: 4px 0 5px; gap: 3px; }
+  .stat { padding: 5px 3px; gap: 3px; }
+  .selector-panel { padding: 7px; margin-bottom: 5px; }
+  .selector-panel .section-title { margin-bottom: 5px; }
+  .content > .farm-panel { padding: 6px; }
+  .content > .farm-panel .section-title { margin-bottom: 5px; }
+  .farm-scene { padding: 3px 2px; }
+  .farm-grid { gap: 3px; }
+  .legend { margin-top: 5px; }
+}
